@@ -2,33 +2,46 @@ const express = require('express');
 const router = express.Router();
 require('dotenv/config');
 const axios = require('axios');
+const BASE_URL = 'https://api.themoviedb.org/3';
+const API_KEY_PARAM = '?api_key=' + process.env.API_KEY;
 
-const apiKey = '?api_key=' + process.env.API_KEY;
-
-router.get('/', (req, res, next) => {
-    const apiResponse = getPopularMovies(process.env.MOVIE_URL + '/movie/popular' + apiKey);
-    apiResponse.then(response => {
-        if (response.data) {
-            res.status(200).json({
-                message: response.data
-            });
-        }
-    })
-});
-
-router.get('/:movieId', (req, res, next) => {
-    const id = req.params.movieId;
-    res.status(200).json({
-        message: 'GET THE MOVIE WITH ID: ' + id 
-    });
-});
-
-const getPopularMovies = async (url) => {
+router.get('/', async (req, res) => {
     try {
-        return await axios.get(url);
+        const response = await axios.get(`${BASE_URL}/movie/popular${API_KEY_PARAM}`);
+        return res.status(200).json({ message: response.data });
     } catch (error) {
-        console.log(error?.data);
+        console.log(error);
+        return handleError(res, error);
     }
+});
+
+router.get('/search/:query', async (req, res) => {
+    try {
+        const term = req.params.query;
+        console.log('query: + term')
+        const response = await axios.get(`${BASE_URL}/search/movie${API_KEY_PARAM}&query=${term}`);
+        return res.status(200).json({ message: response.data });
+    } catch (error) {
+        console.log(error);
+        return handleError(res, error);
+    }
+});
+
+router.get('/:movieId', async (req, res) => {
+    try {
+        const id = req.params.movieId;
+        const response = await axios.get(`${BASE_URL}/movie/${id}${API_KEY_PARAM}`);
+        return res.status(200).json({ message: response.data });
+    } catch (error) {
+        console.log(error);
+        return handleError(res, error);
+    }
+});
+
+const handleError = (response, error) => {
+    const status = error.response.status;
+    const errorJson = { error: error.response.data }
+    return response.status(status).json(errorJson);
 }
 
 module.exports = router;
