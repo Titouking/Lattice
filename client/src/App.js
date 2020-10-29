@@ -1,62 +1,79 @@
 import React, { useEffect, useState } from 'react';
 import './App.css';
 import MoviesList from './moviesList';
+import MovieInfo from './movieInfo';
+import ApiManager from './services/apiManager';
 
-function App() {
+export default function App() {
 
-  const [movies, setMovies] = useState([]);
+  const INIT_MOVIES = [];
+  const INIT_MOVIE = undefined;
+
+  const [movies, setMovies] = useState(INIT_MOVIES);
   const [query, setQuery] = useState('');
-  const [movieSelected, setMovieSelected] = useState(false);
-  
+  const [movie, setMovie] = useState(INIT_MOVIE);
+  const serverUrl = "http://localhost:4000/movie";
+
   useEffect(() => {
     // initialize the list of popular movies
-    getPopularMovies();
+    ApiManager.getInstance().getPopularMovies(serverUrl).then(data => {
+      setMovies(data.results);
+      setMovie(INIT_MOVIE);
+    });
   }, []);
-
-  const getPopularMovies = async () => {
-    const url = `https://api.themoviedb.org/3/movie/popular?api_key=06d48fee752cff62217786c617281f5b`;
-    try {
-        const res = await fetch(url);
-        const data  = await res.json();
-        console.log(data);
-        setMovies(data.results);
-        setMovieSelected(false);
-    } catch(err){
-        console.error(err);
-    }
-  }
-
-  const searchMovies = async (e) => {
-      e.preventDefault();
-      console.log("submitting");
-      
-      if (query) {
-        const url = `https://api.themoviedb.org/3/search/movie?api_key=06d48fee752cff62217786c617281f5b&language=en-US&query=${query}&page=1&include_adult=false`;
-        
-        try {
-            const res = await fetch(url);
-            const data  = await res.json();
-            console.log(data);
-            setMovies(data.results);
-            setMovieSelected(false);
-        } catch(err){
-            console.error(err);
-        }
-      }
-
-  }
 
   const handlePopularMovieClick = () => {
     // clear search input
     setQuery('');
-    getPopularMovies();
+    ApiManager.getInstance().getPopularMovies(serverUrl).then(data => {
+        setMovies(data.results);
+        setMovie(INIT_MOVIE);
+    });
+  }
+
+  const handleTopRatedMovieClick = () => {
+    // clear search input
+    setQuery('');
+    ApiManager.getInstance().getTopRatedMovies(serverUrl).then(data => {
+      setMovies(data.results);
+      setMovie(INIT_MOVIE);
+    });
+  }
+
+  const handleNowPlayingMovieClick = () => {
+    // clear search input
+    setQuery('');
+    ApiManager.getInstance().getNowPlayingMovies(serverUrl).then(data => {
+      setMovies(data.results);
+      setMovie(INIT_MOVIE);
+    });
+  }
+
+  const handleSearchMovies = (e) => {
+    e.preventDefault();
+    
+    if (query) {
+      ApiManager.getInstance().searchMovies(serverUrl, query).then(data => {
+        setMovies(data.results);
+        setMovie(INIT_MOVIE);
+      });
+    }
+  }
+
+  const handleMovieSelectionClick = (movie) => {
+    // clear search input
+    setQuery('');
+    ApiManager.getInstance().getMovie(serverUrl, movie.id).then(data => {
+      setMovies(INIT_MOVIES);
+        setMovie(data);
+    });
   }
 
   return (
     <div className="container">
       <h1 className="title">Movies</h1>
       
-      <form className="form" onSubmit={searchMovies}>
+      <form className="form" onSubmit={handleSearchMovies}>
           <label className="label" htmlFor="query">Movie Name</label>
           <input className="input" type="text" name="query"
               placeholder="i.e. Jurassic Park"
@@ -67,11 +84,12 @@ function App() {
 
       <div className="quicklinks">
           <button className="button" type="button" onClick={handlePopularMovieClick} >Popular</button>
+          <button className="button" type="button" onClick={handleTopRatedMovieClick} >Top Rated</button>
+          <button className="button" type="button" onClick={handleNowPlayingMovieClick} >Now Playing</button>
       </div>
 
-      <MoviesList movies={movies} details={false} fullmovie={movieSelected}/>
+      { movies && <MoviesList movies={movies} details={false} onMovieClicked={handleMovieSelectionClick}/> }
+      { movie && <MovieInfo movie={movie}/> }
     </div>
   );
 }
-
-export default App;

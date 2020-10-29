@@ -24,7 +24,7 @@ small {
 .container {
   margin: 0 auto;
   max-width:1600px;
-  padding: 40px;
+  padding: 0 40px;
   width: 100%;
 }
 
@@ -87,8 +87,8 @@ small {
 }
 
 .card {
-  padding: 2rem 4rem;
-  margin: 0 1rem;
+  padding: 2rem;
+  margin: 0 2rem;
   border-radius: 10px;
   box-shadow: 1px 1px 5px rgba(0,0,0,0.25);
   margin-bottom: 2rem;
@@ -97,18 +97,17 @@ small {
 }
 
 .card--title {
-  margin-bottom: 0.5rem;
-  font-size: 3.2rem;
+  margin-bottom: 5rem;
+  font-size: 2.3rem;
 }
 
 .card--image {
-  margin: 0 auto;
+  /* margin: 0 auto; */
   display: block;
   cursor: pointer;
 }
 
 .card-fullmovie {
-  margin-top: 4rem;
   display: flex;
   justify-content: center;
 }
@@ -117,14 +116,40 @@ small {
   width: 80%;
 }
 
+.card--tagline {
+  font: italic 600 1.8rem sans-serif;
+  text-align: center;
+  max-width: 85%;
+}
+
+.card--genres {
+  font-size: 1.5rem;
+}
+
+.card--info > h1 {
+  margin-bottom: 0;
+  font-size: 1.5rem;
+}
+
+.card--info > p {
+  margin-top: 0;
+  font-size: 1.4rem;
+}
+
 .card--left {
-  width: 60%;
+  width: 45%;
+  overflow: hidden;
 }
 
 .card--right {
-  width: 40%;;
+  width: 55%;
+  margin-left: 1rem;
 }
 
 .quicklinks {
   margin-top: 2rem;
+}
+
+.quicklinks > button {
+  margin-right: 1rem;
 }
