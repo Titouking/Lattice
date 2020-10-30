@@ -60,10 +60,10 @@ export default function App() {
     }
   }
 
-  const handleMovieSelectionClick = (movie) => {
+  const handleMovieSelectionClick = (selectedMovie) => {
     // clear search input
     setQuery('');
-    ApiManager.getInstance().getMovie(serverUrl, movie.id).then(data => {
+    ApiManager.getInstance().getMovie(serverUrl, selectedMovie.id).then(data => {
       setMovies(INIT_MOVIES);
         setMovie(data);
     });
