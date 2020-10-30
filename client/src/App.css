@@ -94,6 +94,12 @@ small {
   margin-bottom: 2rem;
   background-color: white;
   display: flex;
+  transition: transform 400ms ease 0s;
+  box-shadow: rgba(0, 0, 0, 0.2) 0px 1rem 2rem;
+}
+
+.card-list > .card:hover {
+  transform: scale(1.05);
 }
 
 .card--title {
