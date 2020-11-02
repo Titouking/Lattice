@@ -59,4 +59,15 @@ export default class ApiManager extends Component {
             console.error(err);
         }
     }
+
+    async getSimilarMovies(url, movieId) {
+        try {
+            const res = await fetch(`${url}/${movieId}/similar`);
+            const data  = await res.json();
+
+            return data.message;
+        } catch(err){
+            console.error(err);
+        }
+    }
 }

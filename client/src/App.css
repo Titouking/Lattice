@@ -132,7 +132,7 @@ small {
   font-size: 1.5rem;
 }
 
-.card--info > h1 {
+.card--info > h1, .card--similar > h1 {
   margin-bottom: 0;
   font-size: 1.5rem;
 }
@@ -158,4 +158,20 @@ small {
 
 .quicklinks > button {
   margin-right: 1rem;
+}
+
+.card-list-sm {
+  margin-top: 1rem;
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.card-list-sm > .card {
+  padding: 0;
+  margin: 0 1rem;
+  margin-bottom: 1rem;
+}
+
+.card-list-sm > .card:hover {
+  transform: scale(1.05);
 }

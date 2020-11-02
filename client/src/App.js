@@ -32,7 +32,6 @@ export default function App() {
   }
 
   const handleTopRatedMovieClick = () => {
-    // clear search input
     setQuery('');
     ApiManager.getInstance().getTopRatedMovies(serverUrl).then(data => {
       setMovies(data.results);
@@ -41,7 +40,6 @@ export default function App() {
   }
 
   const handleNowPlayingMovieClick = () => {
-    // clear search input
     setQuery('');
     ApiManager.getInstance().getNowPlayingMovies(serverUrl).then(data => {
       setMovies(data.results);
@@ -65,7 +63,14 @@ export default function App() {
     setQuery('');
     ApiManager.getInstance().getMovie(serverUrl, selectedMovie.id).then(data => {
       setMovies(INIT_MOVIES);
-        setMovie(data);
+      setMovie(data);
+    });
+  }
+
+  const handleSimilarMovieClick = (similarMovie) => {
+    ApiManager.getInstance().getMovie(serverUrl, similarMovie.id).then(data => {
+      setMovies(INIT_MOVIES);
+      setMovie(data);
     });
   }
 
@@ -88,8 +93,8 @@ export default function App() {
           <button className="button" type="button" onClick={handleNowPlayingMovieClick} >Now Playing</button>
       </div>
 
-      { movies && <MoviesList movies={movies} details={false} onMovieClicked={handleMovieSelectionClick}/> }
-      { movie && <MovieInfo movie={movie}/> }
+      { movies && <MoviesList movies={movies} details={false} small={false} onMovieClicked={handleMovieSelectionClick}/> }
+      { movie && <MovieInfo movie={movie} onSimilarMovieClicked={handleSimilarMovieClick}/> }
     </div>
   );
 }

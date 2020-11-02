@@ -87,6 +87,22 @@ router.get('/:movieId', async (req, res) => {
     }
 });
 
+router.get('/:movieId/similar', async (req, res) => {
+    try {
+        const id = req.params.movieId;
+        let getSimilar = cache.get(`getSimilar_${id}`);
+        if (!getSimilar) {
+            getSimilar = await axios.get(`${BASE_URL}/movie/${id}/similar${API_KEY_PARAM}`);
+            cache.set(`getSimilar_${id}`, getSimilar.data, ttl);
+            getSimilar = getSimilar.data;
+        }
+        return res.status(200).json({ message: getSimilar });
+    } catch (error) {
+        console.log(error);
+        return handleError(res, error);
+    }
+});
+
 const handleError = (response, error) => {
     const status = error.response.status;
     const errorJson = { error: error.response.data }

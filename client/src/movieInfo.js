@@ -1,6 +1,21 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import ApiManager from './services/apiManager';
+import MoviesList from './moviesList';
 
 export default function MovieInfo(props) {
+    
+    const serverUrl = "http://localhost:4000/movie";
+    const [similarMovies, setSimilarMovies] = useState([]);
+
+    useEffect(() => {
+        ApiManager.getInstance().getSimilarMovies(serverUrl, props.movie.id).then(data => {
+            setSimilarMovies(data.results);
+        });
+    }, [props.movie.id]);
+
+    const handleMovieSelectionClick = (e) => {
+        props.onSimilarMovieClicked(e);
+    }
 
     return (
         <div className="card-fullmovie">
@@ -23,6 +38,11 @@ export default function MovieInfo(props) {
                         <p>{props.movie.overview}</p>
 
                         <h2>Release Date: {new Date(props.movie.release_date).toLocaleDateString([], { year: 'numeric', month: 'long', day: 'numeric' })}</h2>
+                    </div>
+
+                    <div className="card--similar">
+                        <h1>Similar movies:</h1>
+                        { similarMovies && <MoviesList movies={similarMovies} details={false} small={true} onMovieClicked={handleMovieSelectionClick}/> }
                     </div>
                 </div>
             </div>
