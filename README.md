@@ -1,4 +1,4 @@
-# Lattice
+# Take home movie application assignment
 
 ## To run this project, follow these steps:
 
